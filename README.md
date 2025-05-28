@@ -27,10 +27,26 @@ npm install
 
 ### Option 2: Use npx (without installation)
 
-You can run the Readwise MCP server directly with npx without installing it locally:
+You can run the Readwise MCP server directly with npx without installing it locally. There are two ways to do this:
+
+#### Using a published package
 
 ```bash
 npx readwise-mcp@latest <YOUR_READWISE_API_TOKEN>
+```
+
+#### Using a local package (for development)
+
+If you're developing the package locally and want to test it with npx:
+
+```bash
+# First, build the package
+cd /path/to/readwise-mcp
+npm run build
+chmod +x dist/index.js  # Make the entry point executable
+
+# Then run it with npx from any directory
+npx /path/to/readwise-mcp <YOUR_READWISE_API_TOKEN>
 ```
 
 ## Configuration
