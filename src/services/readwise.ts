@@ -55,7 +55,6 @@ export interface Highlight {
   title?: string;
   author?: string;
   source_url?: string;
-  source_type?: string;
   note?: string;
   location?: number;
   location_type?: string;
@@ -73,15 +72,39 @@ export class ReadwiseService {
   }
 
   /**
+   * Clean highlight data by removing empty strings (replacing with null)
+   * @param highlight The highlight data to clean
+   * @returns Cleaned highlight data
+   */
+  private cleanHighlightData(highlight: Highlight): Highlight {
+    const cleanedHighlight: Highlight = { ...highlight };
+    
+    // Process each field and set empty strings to null
+    Object.keys(cleanedHighlight).forEach(key => {
+      const value = cleanedHighlight[key as keyof Highlight];
+      if (value === '') {
+        // Set empty strings to null/undefined
+        (cleanedHighlight as any)[key] = null;
+      }
+    });
+    
+    return cleanedHighlight;
+  }
+
+  /**
    * Create a new highlight in Readwise
    * @param highlight The highlight data to create
    * @returns The created highlight data
    */
   async createHighlight(highlight: Highlight): Promise<any> {
     try {
+      // Clean the highlight data
+      const cleanedHighlight = this.cleanHighlightData(highlight);
+      console.log('cleanedHighlight', cleanedHighlight);
+      
       // Readwise API expects an array of highlights under a 'highlights' key
       const response = await this.api.post('/highlights/', { 
-        highlights: [highlight] 
+        highlights: [cleanedHighlight] 
       });
       return response.data;
     } catch (error) {
@@ -97,7 +120,10 @@ export class ReadwiseService {
    */
   async createHighlights(highlights: Highlight[]): Promise<any> {
     try {
-      const response = await this.api.post('/highlights/', { highlights });
+      // Clean each highlight in the array
+      const cleanedHighlights = highlights.map(highlight => this.cleanHighlightData(highlight));
+      
+      const response = await this.api.post('/highlights/', { highlights: cleanedHighlights });
       return response.data;
     } catch (error) {
       console.error('Error creating highlights:', error);

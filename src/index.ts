@@ -60,7 +60,6 @@ const createHighlightSchema = {
     title: { type: "string", description: "The title of the source" },
     author: { type: "string", description: "The author of the source" },
     source_url: { type: "string", description: "URL of the source" },
-    source_type: { type: "string", description: "Type of the source (e.g., book, article)" },
     note: { 
       type: "string", 
       description: "Note associated with the highlight. You can include inline tags by starting the note with a period followed by a tag name (e.g., '.important This is a note'). Multiple tags can be added by separating them with spaces (e.g., '.important .toread This is a note')."
